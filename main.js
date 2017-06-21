@@ -123,6 +123,7 @@ $(document).ready(function () {
     function updateHistory(messages) {
         messages
             .filter(m => m.type === 'chat')//groupchat are also received by event(onChannelMessage). Possible solution: store msg id and ignore duplicates
+			.sort((m1, m2) => m1.stamp - m2.stamp)
             .forEach(m => addMessageToHistory(m));
     }
 
