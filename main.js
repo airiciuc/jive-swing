@@ -7,6 +7,7 @@ $(document).ready(function () {
 
     client.onDirectMessage(m => updateMessages(m.from.bare, m.from.bare, m.body));
     client.onChannelMessage(m => updateMessages(m.from.resource, m.from.bare, m.body));
+	client.onHistory(m => updateHistory(m));
 
     $("#connect").click(function () {
         const username = $("#jid").val();
@@ -36,7 +37,8 @@ $(document).ready(function () {
 
         client.getChannels((channels) => displayChannels(channels));
         client.getDirectMessages((dms) => displayDirectMessages(dms));
-        client.getHistory((messages) => updateHistory(messages));
+        //client.getHistory((messages) => updateHistory(messages));
+		client.getHistory();
     }
 
     function displayChannels(channels) {
@@ -129,8 +131,13 @@ $(document).ready(function () {
         let from = msg.from.bare;
 
         let sendByMe = from === $("#jid").val();
+		
+		let chattable = chattables.find(c => c.jid === (sendByMe ? to : from));
+		if (!chattable) {
+			chattable = addChattable($("#users"), sendByMe ? to : from, false);
+		}
 
-        chattables.find(c => c.jid === (sendByMe ? to : from)).history.push({
+        chattable.history.push({
             from: from,
             message: msg.body
         });
