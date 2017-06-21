@@ -82,6 +82,7 @@ function XmppClient() {
 				var start = new Date(chat.getAttribute("start"));
 				
 				var history = data.xml.children[0].children
+					.filter(child => child.name == 'to' || child.name === 'from')
 					.map(function (child) { 
 						var tag = child.name;
 						return {
