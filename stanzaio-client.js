@@ -168,10 +168,6 @@ function XmppClient() {
         client.requestRoomVoice(jid);
     };
 
-    //This function loads the entire history, icluding room history - which is also sent by default by openfire.
-    //Check https://github.com/legastero/stanza.io/blob/master/docs/Reference.md#clientsearchhistoryopts-cb for search options
-    //this.getHistory = (callback) => client.searchHistory({}, (err, data) => callback(getHistoryMessages(data)));
-
     this.getHistory = (withJid, max, after) => {
         let ops = {
             with : withJid
