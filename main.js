@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     client.onDirectMessage(m => updateMessages(m.from.bare, m.from.bare, m.body));
     client.onChannelMessage(m => updateMessages(m.from.resource, m.from.bare, m.body));
-	client.onHistory(m => updateHistory(m));
+	client.onHistory(history => updateHistory(history));
 
     $("#connect").click(function () {
         const username = $("#jid").val();
@@ -37,8 +37,6 @@ $(document).ready(function () {
 
         client.getChannels((channels) => displayChannels(channels));
         client.getDirectMessages((dms) => displayDirectMessages(dms));
-        //client.getHistory((messages) => updateHistory(messages));
-		client.getHistory();
     }
 
     function displayChannels(channels) {
@@ -48,6 +46,7 @@ $(document).ready(function () {
 
     function displayDirectMessages(dms) {
         dms.forEach(dm => addChattable($("#users"), dm, false));
+        dms.forEach(dm => client.getHistory(dm));
     }
 
     function addChattable(body, jid, isChannel) {
@@ -120,9 +119,9 @@ $(document).ready(function () {
             .scrollTop(dom[0].scrollHeight);
     }
 
-    function updateHistory(messages) {
-        messages
-            .filter(m => m.type === 'chat')//groupchat are also received by event(onChannelMessage). Possible solution: store msg id and ignore duplicates
+    function updateHistory(history) {
+        console.log(history.count);
+        history.messages
 			.sort((m1, m2) => m1.stamp - m2.stamp)
             .forEach(m => addMessageToHistory(m));
     }
